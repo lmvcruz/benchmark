@@ -6,8 +6,7 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 
-#include "stlaux/vecaux.h"
-#include "benchmarklib/benchmarklib.h"
+#include "ctk/ctkvectoraux.h"
 
 using namespace std;
 
@@ -66,6 +65,18 @@ vector<int> solution(vector<int> &vec, vector<int> &p, vector<int> &q)
     return sol;
 }
 
+std::vector<int> string2vecint(const QString &str)
+{
+    QStringList strsplit = str.split(",");
+    std::vector<int> vec;
+    vec.resize(strsplit.size());
+    for (unsigned i=0; i<vec.size(); i++) {
+        vec[i] = strsplit[i].toInt();
+    }
+    return vec;
+}
+
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -87,7 +98,7 @@ int main(int argc, char *argv[])
     vector<int> p = string2vecint(args[1]);
     vector<int> q = string2vecint(args[2]);
     vector<int> sol = solution(vec, p, q);
-    showVector(sol);
+    ctk::show(sol);
     //
     return 0;
 }

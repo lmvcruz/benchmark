@@ -14,17 +14,28 @@ class BenchmarkProgram : public QObject
 
 public:
     BenchmarkProgram(QObject *par = nullptr);
+    BenchmarkProgram(const BenchmarkProgram &that);
+
+    BenchmarkProgram & operator=(const BenchmarkProgram &that);
+
+    void setExecutable(QString ex);
+    void setArgs(QStringList args);
+    void setValidation(QString val);
+
+    QString output();
+    QString expectedOutput();
 
     void clear();
     void read(QString filename);
     void run();
+    bool validate();
     void showReport();
 
 public slots:
     void finished();
     void readProcessOutput();
 
-private:
+public:
     QString m_exec;
     QStringList m_args;
     QString m_val;
@@ -40,14 +51,12 @@ class BenchmarkEngine
 public:
     BenchmarkEngine() = default;
 
-    void read(QString &filename);
+    void read(QString filename);
 
-    QString executable();
-    QStringList parametersList();
+    void run();
 
 private:
-    QString m_exec;
-    QStringList m_params;
+    QVector<BenchmarkProgram> m_programs;
 };
 
 #endif // BENCHMARKENGINE_H

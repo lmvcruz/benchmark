@@ -3,5 +3,11 @@
             "../grq1/grq1",
             "../grq2/grq2"
     ],
-    "output": "../../../projects/genomicrangequery/out/grq2_1.json"
+    "args": [
+            "1,3,2,3,2,1,1,2,1,2,4",
+            "1,2,1,2,2",
+            "1,2,3,4,5"
+    ],
+    "validation" : "3 2 2 2 1 \n",
+    "output": "../../../benchmark/projects/genomicrangequery/out/grq_bench1.json"
 }

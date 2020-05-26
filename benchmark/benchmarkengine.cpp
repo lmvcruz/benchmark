@@ -7,7 +7,8 @@
 #include <QProcess>
 #include <QDebug>
 
-#include "benchmarklib/benchmarklib.h"
+//#include "benchmarklib/benchmarklib.h"
+#include "ctk/utils/filesys/filesystem.h"
 
 BenchmarkProgram::BenchmarkProgram(QObject *par)
     : QObject(par)
@@ -16,6 +17,61 @@ BenchmarkProgram::BenchmarkProgram(QObject *par)
                      this, SLOT(finished()));
     QObject::connect(&m_process, SIGNAL(readyReadStandardOutput()),
                      this, SLOT(readProcessOutput()));
+}
+
+BenchmarkProgram::BenchmarkProgram(const BenchmarkProgram &that)
+    : QObject(that.parent())
+{
+    QObject::connect(&m_process, SIGNAL(finished(int,QProcess::ExitStatus)),
+                     this, SLOT(finished()));
+    QObject::connect(&m_process, SIGNAL(readyReadStandardOutput()),
+                     this, SLOT(readProcessOutput()));
+    //
+    m_exec = that.m_exec;
+    m_args = that.m_args;
+    m_val = that.m_val;
+//    m_process = that.m_process;
+    m_time = that.m_time;
+    m_procTime = that.m_procTime;
+    m_out = that.m_out;
+}
+
+BenchmarkProgram &BenchmarkProgram::operator=(const BenchmarkProgram &that)
+{
+    setParent(that.parent());
+    m_exec = that.m_exec;
+    m_args = that.m_args;
+    m_val = that.m_val;
+//    m_process = that.m_process;
+    m_time = that.m_time;
+    m_procTime = that.m_procTime;
+    m_out = that.m_out;
+    return *this;
+}
+
+void BenchmarkProgram::setExecutable(QString ex)
+{
+    m_exec = ex;
+}
+
+void BenchmarkProgram::setArgs(QStringList args)
+{
+    m_args = args;
+}
+
+void BenchmarkProgram::setValidation(QString val)
+{
+    m_val = val;
+}
+
+QString BenchmarkProgram::output()
+{
+    return m_out;
+}
+
+QString BenchmarkProgram::expectedOutput()
+{
+    return m_val;
 }
 
 void BenchmarkProgram::clear()
@@ -58,7 +114,7 @@ void BenchmarkProgram::read(QString filename)
 
 void BenchmarkProgram::run()
 {
-    if (fileExists(m_exec)) {
+    if (checkFile(m_exec)) {
         m_time.start();
         m_process.start(m_exec, m_args, QIODevice::ReadWrite);
         m_process.waitForFinished();
@@ -66,6 +122,11 @@ void BenchmarkProgram::run()
     else {
         qDebug() << "File does not exists:" << m_exec;
     }
+}
+
+bool BenchmarkProgram::validate()
+{
+    return (m_out==m_val);
 }
 
 void BenchmarkProgram::showReport()
@@ -87,7 +148,7 @@ void BenchmarkProgram::readProcessOutput()
     m_out = QString(m_process.readAllStandardOutput());
 }
 
-void BenchmarkEngine::read(QString &filename)
+void BenchmarkEngine::read(QString filename)
 {
     QFile readFile(filename);
     if (!readFile.open(QIODevice::ReadOnly))
@@ -100,5 +161,48 @@ void BenchmarkEngine::read(QString &filename)
     readFile.close();
     //
     QJsonObject json = readDoc.object();
-    if ( json.contains("exec") ) {}
+    QJsonArray inputsJsonArray;
+    QStringList args;
+    QString val;
+    if ( json.contains("programs") ) {
+        inputsJsonArray = json["programs"].toArray();
+    }
+    else {
+        qDebug() << "Invalid JSON!!! Missing <programs> attribute.";
+    }
+    //
+    if ( json.contains("args") ) {
+        QJsonArray argJson = json["args"].toArray();
+        for (int i=0; i<argJson.size(); i++) {
+            args.push_back( argJson[i].toString() );
+        }
+    }
+    else {
+        qDebug() << "Invalid JSON!!! Missing <args> attribute.";
+    }
+    //
+    if ( json.contains("validation") ) {
+        val = json["validation"].toString();
+    }
+    else {
+        qDebug() << "Invalid JSON!!! Missing <args> attribute.";
+    }
+    //
+    m_programs.clear();
+    m_programs.resize(inputsJsonArray.size());
+    for (int i=0; i<inputsJsonArray.size(); i++) {
+        BenchmarkProgram &p = m_programs[i];
+        p.setExecutable(inputsJsonArray[i].toString());
+        p.setArgs(args);
+        p.setValidation(val);
+    }
+}
+
+void BenchmarkEngine::run()
+{
+    for (auto i=0; i<m_programs.size(); i++) {
+        m_programs[i].run();
+        if(m_programs[i].validate()) qDebug() << "Valid!" << m_programs[i].output() << m_programs[i].expectedOutput();
+        else qDebug() << "Not Valid!" << m_programs[i].output() << m_programs[i].expectedOutput();
+    }
 }
