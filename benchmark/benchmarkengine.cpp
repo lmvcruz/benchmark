@@ -1,5 +1,8 @@
 #include "benchmarkengine.h"
 
+#include <cstdlib>
+#include <csignal>
+
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -7,7 +10,6 @@
 #include <QProcess>
 #include <QDebug>
 
-//#include "benchmarklib/benchmarklib.h"
 #include "ctk/utils/filesys/filesystem.h"
 
 BenchmarkProgram::BenchmarkProgram(QObject *par)
@@ -54,9 +56,10 @@ void BenchmarkProgram::setExecutable(QString ex)
     m_exec = ex;
 }
 
-void BenchmarkProgram::setArgs(QStringList args)
+void BenchmarkProgram::setArgs(QString args)
 {
-    m_args = args;
+    QStringList sl = {args};
+    m_args = sl;
 }
 
 void BenchmarkProgram::setValidation(QString val)
@@ -72,6 +75,11 @@ QString BenchmarkProgram::output()
 QString BenchmarkProgram::expectedOutput()
 {
     return m_val;
+}
+
+int BenchmarkProgram::time()
+{
+    return m_procTime;
 }
 
 void BenchmarkProgram::clear()
@@ -115,9 +123,10 @@ void BenchmarkProgram::read(QString filename)
 void BenchmarkProgram::run()
 {
     if (checkFile(m_exec)) {
+        m_out = "";
         m_time.start();
         m_process.start(m_exec, m_args, QIODevice::ReadWrite);
-        m_process.waitForFinished();
+        m_process.waitForFinished(-1);
     }
     else {
         qDebug() << "File does not exists:" << m_exec;
@@ -166,43 +175,72 @@ void BenchmarkEngine::read(QString filename)
     QString val;
     if ( json.contains("programs") ) {
         inputsJsonArray = json["programs"].toArray();
+        m_programs.clear();
+        m_programs.resize(inputsJsonArray.size());
+        for (int i=0; i<inputsJsonArray.size(); i++) {
+            BenchmarkProgram &p = m_programs[i];
+            p.setExecutable(inputsJsonArray[i].toString());
+        }
     }
     else {
         qDebug() << "Invalid JSON!!! Missing <programs> attribute.";
+        std::raise(SIGABRT);
     }
     //
-    if ( json.contains("args") ) {
-        QJsonArray argJson = json["args"].toArray();
-        for (int i=0; i<argJson.size(); i++) {
-            args.push_back( argJson[i].toString() );
+    if ( json.contains("inputs") ) {
+        QJsonArray inputsJson = json["inputs"].toArray();
+        m_inputs.clear();
+        for (int i=0; i<inputsJson.size(); i++) {
+            m_inputs.push_back( inputsJson[i].toString() );
         }
     }
     else {
         qDebug() << "Invalid JSON!!! Missing <args> attribute.";
     }
     //
-    if ( json.contains("validation") ) {
-        val = json["validation"].toString();
-    }
-    else {
-        qDebug() << "Invalid JSON!!! Missing <args> attribute.";
+    m_stringcomp = false;
+    if ( json.contains("strings-comp") ) {
+        m_stringcomp = true;
+        QJsonArray compsJson = json["strings-comp"].toArray();
+        m_stringsexpected.clear();
+        for (int i=0; i<compsJson.size(); i++) {
+            m_stringsexpected.push_back( compsJson[i].toString() );
+        }
     }
     //
-    m_programs.clear();
-    m_programs.resize(inputsJsonArray.size());
-    for (int i=0; i<inputsJsonArray.size(); i++) {
-        BenchmarkProgram &p = m_programs[i];
-        p.setExecutable(inputsJsonArray[i].toString());
-        p.setArgs(args);
-        p.setValidation(val);
+    if ( json.contains("evaluations") ) {
+        QJsonArray evalsJson = json["evaluations"].toArray();
+        for (int i=0; i<evalsJson.size(); i++) {
+            QString e = evalsJson[i].toString();
+            if (e=="TIME") {
+                m_evalTime = true;
+            }
+        }
+    }
+    //
+    if ( json.contains("output") ) {
+        m_output = json["output"].toString();
     }
 }
 
+#include "auxiliar.h"
+
 void BenchmarkEngine::run()
 {
+    m_timeMatrix.Create(m_programs.size(), m_inputs.size());
     for (auto i=0; i<m_programs.size(); i++) {
-        m_programs[i].run();
-        if(m_programs[i].validate()) qDebug() << "Valid!" << m_programs[i].output() << m_programs[i].expectedOutput();
-        else qDebug() << "Not Valid!" << m_programs[i].output() << m_programs[i].expectedOutput();
+        for (auto j=0; j<m_inputs.size(); j++) {
+            m_programs[i].setArgs(m_inputs[j]);
+            m_programs[i].setValidation(m_stringsexpected[j]);
+            m_programs[i].run();
+            if(m_programs[i].validate()) qDebug() << "Valid!" << m_programs[i].output() << m_programs[i].expectedOutput();
+            else qDebug() << "Not Valid!" << m_programs[i].output() << m_programs[i].expectedOutput();
+            //
+            m_timeMatrix.set(i, j, m_programs[i].time());
+//            if (m_evalTime) qDebug() << "Time: " << m_programs[i].time();
+        }
     }
+    //
+    checkAndCreateDirectory(m_output);
+    saveCsvFile(m_timeMatrix, m_output+"/exec_time.csv");
 }

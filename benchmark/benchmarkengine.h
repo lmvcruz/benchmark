@@ -8,6 +8,8 @@
 #include <QStringList>
 #include <QTime>
 
+#include "ctk/ctknumericmatrix.h"
+
 class BenchmarkProgram : public QObject
 {
     Q_OBJECT
@@ -19,11 +21,12 @@ public:
     BenchmarkProgram & operator=(const BenchmarkProgram &that);
 
     void setExecutable(QString ex);
-    void setArgs(QStringList args);
+    void setArgs(QString args);
     void setValidation(QString val);
 
     QString output();
     QString expectedOutput();
+    int time();
 
     void clear();
     void read(QString filename);
@@ -57,6 +60,16 @@ public:
 
 private:
     QVector<BenchmarkProgram> m_programs;
+    QVector<QString> m_inputs;
+    QVector<QString> m_evaluations;
+    QString m_output;
+
+    bool m_evalTime;
+
+    bool m_stringcomp;
+    QVector<QString> m_stringsexpected;
+
+    ctk::NumericMatrix m_timeMatrix;
 };
 
 #endif // BENCHMARKENGINE_H

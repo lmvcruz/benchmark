@@ -1,0 +1,10 @@
+{
+    "programs": [
+            "../primes1/primes1",
+            "../primes2/primes2"
+    ],
+    "inputs": ["10", "100", "1000", "100000", "1000000"],
+    "strings-comp" : ["4", "25", "168", "9592", "78498"],
+    "evaluations" : [ "TIME" ],
+    "output" : "../../benchmark/projects/primes/out"
+}
