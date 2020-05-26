@@ -1,0 +1,7 @@
+{
+    "programs": [
+            "../grq1/grq1",
+            "../grq2/grq2"
+    ],
+    "output": "../../../projects/genomicrangequery/out/grq2_1.json"
+}
