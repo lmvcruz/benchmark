@@ -12,6 +12,8 @@
 
 #include "ctk/utils/filesys/filesystem.h"
 
+#include "auxiliar.h"
+
 BenchmarkProgram::BenchmarkProgram(QObject *par)
     : QObject(par)
 {
@@ -223,8 +225,6 @@ void BenchmarkEngine::read(QString filename)
     }
 }
 
-#include "auxiliar.h"
-
 void BenchmarkEngine::run()
 {
     m_timeMatrix.Create(m_programs.size(), m_inputs.size());
@@ -237,7 +237,7 @@ void BenchmarkEngine::run()
             else qDebug() << "Not Valid!" << m_programs[i].output() << m_programs[i].expectedOutput();
             //
             m_timeMatrix.set(i, j, m_programs[i].time());
-//            if (m_evalTime) qDebug() << "Time: " << m_programs[i].time();
+            if (m_evalTime) qDebug() << "Time: " << m_programs[i].time();
         }
     }
     //
