@@ -13,7 +13,7 @@ SUBDIRS = \
     projects/randmarks/createdata \
     projects/randmarks/quantity
 
-benchmark.depends = benchmark grq1 grq2 primes1 primes1
+benchmark.depends = ../ctk/ctk ../ctk/utils/filesys
 grq1.depends = ../ctk/ctk ../ctk/utils/filesys
 grq2.depends = ../ctk/ctk ../ctk/utils/filesys 
 primes1.depends = ../ctk/ctk ../ctk/utils/filesys
