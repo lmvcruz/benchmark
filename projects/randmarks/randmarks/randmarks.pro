@@ -26,13 +26,9 @@ MOC_DIR = $$BUILD_FOLDER/$$TARGET
 DESTDIR = $$BUILD_FOLDER/libs
 
 SOURCES += \
-    descriptor.cpp \
-    mark.cpp \
     randmark.cpp
 
 HEADERS += \
-    descriptor.h \
-    mark.h \
     randmark.h
 
 # Default rules for deployment.

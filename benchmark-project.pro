@@ -11,8 +11,8 @@ SUBDIRS = \
 #    projects/primes/primes1 \
 #    projects/primes/primes2 \
     projects/randmarks/randmarks \
-#    projects/randmarks/createdata \
-#    projects/randmarks/quantity \
+    projects/randmarks/createdata \
+    projects/randmarks/quantity \
     snippets
 
 benchmark.depends = ../ctk/ctk ../ctk/utils/filesys
