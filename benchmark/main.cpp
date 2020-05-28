@@ -2,20 +2,22 @@
 
 #include <QCoreApplication>
 
-//#include "benchmarklib/benchmarklib.h"
-#include "benchmarkengine.h"
+#include "benchlib/benchmarkengine.h"
 
 using namespace std;
+
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     BenchmarkEngine engine;
     // EX: "../../benchmark/projects/genomicrangequery/setup/bench1.json"
+    // EX: "../../benchmark/projects/genomicrangequery/setup/primes1_val.json"
     if (argc>1) {
-        QString args(argv[1]);
+        QString args = "../../benchmark/projects/primes/setup/primes1_val.txt";
         engine.read(args);
-        engine.run();
+        engine.ValidateAll();
+        engine.performance();
     }
     return 0;
 }

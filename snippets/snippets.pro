@@ -1,10 +1,11 @@
 TEMPLATE = app
 CONFIG += c++14
 CONFIG -= app_bundle
+#CONFIG -= qt
 
-TARGET = benchmark
+TARGET = snippets
 
-ROOT_FOLDER = $$PWD/../
+ROOT_FOLDER = $$PWD/..
 BUILD_FOLDER = $$ROOT_FOLDER/../build
 
 OBJECTS_DIR = $$BUILD_FOLDER/$$TARGET
@@ -12,17 +13,13 @@ MOC_DIR = $$BUILD_FOLDER/$$TARGET
 DESTDIR = $$BUILD_FOLDER/$$TARGET
 
 SOURCES += \
-#        auxiliar.cpp \
-#        benchmarkengine.cpp \
+        benchprimenums.cpp \
+        benchrandmarks.cpp \
         main.cpp
-
-HEADERS += \
-#    auxiliar.h
-#    benchmarkengine.h
 
 ## Libraries
 INCLUDEPATH += $$ROOT_FOLDER $$ROOT_FOLDER/.. $$ROOT_FOLDER/../ctk
-DEPENDPATH += $$ROOT_FOLDER $$ROOT_FOLDER/../ctk
+DEPENDPATH += $$ROOT_FOLDER $$ROOT_FOLDER/.. $$ROOT_FOLDER/../ctk
 
 LIBS += -L$$BUILD_FOLDER/libs -lctk
 PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libctk.a
@@ -30,12 +27,17 @@ PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libctk.a
 LIBS += -L$$BUILD_FOLDER/libs -lfilesys
 PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libfilesys.a
 
-
 LIBS += -L$$BUILD_FOLDER/libs -lbenchlib
 PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libbenchlib.a
 
-DISTFILES += \
-    ../projects/primes/setup/bench1.json
+INCLUDEPATH += $$PWD/../projects/randmarks/randmarks
+DEPENDPATH += $$PWD/../projects/randmarks/randmarks
+LIBS += -L$$BUILD_FOLDER/libs -lrandmarks
+#PRE_TARGETDEPS += $$BUILD_FOLDER/libs/librandmarks.a
+
+HEADERS += \
+    benchprimenums.h \
+    benchrandmarks.h
 
 unix:!macx {
     CONFIG += link_pkgconfig

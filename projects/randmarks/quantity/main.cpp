@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     db.CreateDescriptor(desc);
     //
     for (int i=1; i<=10; i++) {
-        std::cout << "Thresh: " << i << std::endl;
+        //std::cout << "Thresh: " << i << std::endl;
         db.Compare(i);
     }
     //

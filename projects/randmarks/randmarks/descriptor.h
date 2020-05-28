@@ -32,12 +32,10 @@ public:
     void AddData(double v);
     void setBinValue(int b, int v);
 
-    //TODO: remover o minV e maxV e usar o setRange
     void CreateBins(std::vector<double> &vec);
 
     int Distance(Histogram &that);
 };
-
 
 // Integer Descriptor class
 class Descriptor {
@@ -72,7 +70,6 @@ public:
     DistanceDescriptor();
 
     Histogram Calculate(SampleMark &mark);
-
 };
 
 // Particle Angle descriptor

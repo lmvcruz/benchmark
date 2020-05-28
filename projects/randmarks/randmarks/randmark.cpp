@@ -132,10 +132,10 @@ SetMark &MarkDB::get(int i)
 void MarkDB::Open(QString dirdb)
 {
     QVector<QString> files = createFileList(dirdb, "txt");
-    std::cout << dirdb.toStdString() << " " << files.size() << std::endl;
+//    std::cout << dirdb.toStdString() << " " << files.size() << std::endl;
     m_db.resize(files.size());
     for (int i=0; i<files.size(); i++) {
-        std::cout << files[i].toStdString() << std::endl;
+//        std::cout << files[i].toStdString() << std::endl;
         m_db[i].Open(files[i]);
     }
 }
@@ -161,7 +161,7 @@ void MarkDB::Show()
 
 void MarkDB::CreateDescriptor(Descriptor *desc)
 {
-    std::cout << "Creating Descriptors" << std::endl;
+//    std::cout << "Creating Descriptors" << std::endl;
     for (auto i=0; i<m_db.size(); i++) {
         for (auto j=0; j<m_db[i].size(); j++) {
             SampleMark& m = m_db[i].get(j);
@@ -173,7 +173,7 @@ void MarkDB::CreateDescriptor(Descriptor *desc)
 
 void MarkDB::Compare(int thresh, bool show)
 {
-    if(show)std::cout << "Comparing Descriptors" << std::endl;
+    if(show) std::cout << "Comparing Descriptors" << std::endl;
     int tp = 0;
     int fp = 0;
     int tn = 0;
@@ -196,7 +196,8 @@ void MarkDB::Compare(int thresh, bool show)
                     if (d<=thresh) tp++;
                     else fp++;
                 }
-            } else {
+            }
+            else {
                 for (auto k=0; k<set2.size(); k++) {
                     Histogram& h2 = set2.getHistogram(k);
                     int d = h1.Distance(h2);
@@ -211,8 +212,9 @@ void MarkDB::Compare(int thresh, bool show)
             }
         }
     }
-    std::cout << "True Positives: " << tp << std::endl;
-    std::cout << "True Negatives: " << tn << std::endl;
-    std::cout << "False Positives: " << fp << std::endl;
-    std::cout << "False Negatives: " << fn << std::endl;
+//    std::cout << "True Positives: " << tp << std::endl;
+//    std::cout << "True Negatives: " << tn << std::endl;
+//    std::cout << "False Positives: " << fp << std::endl;
+//    std::cout << "False Negatives: " << fn << std::endl;
+    std::cout << tp << " " << tn << " " << fp << " " << fn << std::endl;
 }

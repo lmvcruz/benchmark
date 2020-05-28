@@ -3,6 +3,11 @@
 #include <QFile>
 #include <QTextStream>
 
+bool CompareStringEquals(QString str1, QString str2)
+{
+    return (str1==str2);
+}
+
 void saveCsvFile(ctk::NumericMatrix &mat, QString filename)
 {
     QFile file(filename);

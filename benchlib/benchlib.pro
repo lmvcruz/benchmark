@@ -16,9 +16,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-TARGET = randmarks
+TARGET = benchlib
 
-ROOT_FOLDER = $$PWD/../../..
+ROOT_FOLDER = $$PWD/../
 BUILD_FOLDER = $$ROOT_FOLDER/../build
 
 OBJECTS_DIR = $$BUILD_FOLDER/$$TARGET
@@ -26,14 +26,14 @@ MOC_DIR = $$BUILD_FOLDER/$$TARGET
 DESTDIR = $$BUILD_FOLDER/libs
 
 SOURCES += \
-    descriptor.cpp \
-    mark.cpp \
-    randmark.cpp
+    benchmarkengine.cpp \
+    benchmarkevaluation.cpp \
+    benchmarkprogram.cpp
 
 HEADERS += \
-    descriptor.h \
-    mark.h \
-    randmark.h
+    benchmarkengine.h \
+    benchmarkevaluation.h \
+    benchmarkprogram.h
 
 # Default rules for deployment.
 unix {
