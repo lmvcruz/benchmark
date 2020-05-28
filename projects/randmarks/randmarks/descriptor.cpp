@@ -92,6 +92,11 @@ void Histogram::AddData(double v)
     m_data[idx]++;
 }
 
+void Histogram::setBinValue(int b, int v)
+{
+    m_data[b] = v;
+}
+
 void Histogram::CreateBins(std::vector<double> &vec)
 {
     for(auto &v: vec) AddData(v);
@@ -138,9 +143,7 @@ Histogram QuantityDescriptor::Calculate(SampleMark &mark)
     Histogram hist;
     hist.setRange(m_bins, m_minv, m_maxv);
     // calculte number os particles
-    double qty = std::min(static_cast<double>(mark.CalculateMarkSize()),
-                          hist.maxRange() );
-    hist.AddData(qty);
+    hist.setBinValue(0, mark.CalculateMarkSize());
     return hist;
 }
 

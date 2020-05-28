@@ -46,7 +46,7 @@ public:
     void Show();
 
     void CreateDescriptor(Descriptor *desc);
-    void Compare(int thresh);
+    void Compare(int thresh, bool show=false);
 };
 
 

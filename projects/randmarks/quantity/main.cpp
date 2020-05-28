@@ -22,9 +22,13 @@ int main(int argc, char *argv[])
     MarkDB db;
     db.Open("../../benchmark/projects/randmarks/data");
     Descriptor* desc = new QuantityDescriptor;
-    desc->setRange(101, 0, 100);
+    desc->setRange(1, 0, 1000);
     db.CreateDescriptor(desc);
-    db.Compare(1);
+    //
+    for (int i=1; i<=10; i++) {
+        std::cout << "Thresh: " << i << std::endl;
+        db.Compare(i);
+    }
     //
     return 0;
 }

@@ -171,15 +171,15 @@ void MarkDB::CreateDescriptor(Descriptor *desc)
     }
 }
 
-void MarkDB::Compare(int thresh)
+void MarkDB::Compare(int thresh, bool show)
 {
-    std::cout << "Comparing Descriptors" << std::endl;
+    if(show)std::cout << "Comparing Descriptors" << std::endl;
     int tp = 0;
     int fp = 0;
     int tn = 0;
     int fn = 0;
     for (auto i=0; i<m_db.size(); i++) {
-        std::cout << "Mark: " << i << std::endl;
+        if(show)std::cout << "Mark: " << i << std::endl;
         SetMark& set1 = m_db[i];
         Histogram& h1 = set1.getHistogram(0);
         for (auto j=0; j<m_db.size(); j++) {
@@ -188,6 +188,11 @@ void MarkDB::Compare(int thresh)
                 for (auto k=1; k<set2.size(); k++) {
                     Histogram& h2 = set2.getHistogram(k);
                     int d = h1.Distance(h2);
+                    if(show) {
+                        std::cout << i << " " << j << " " << k << " ";
+                        std::cout << d << " " << h1.get_data()[0] << " " ;
+                        std::cout << h2.get_data()[0] << " " << thresh << std::endl;
+                    }
                     if (d<=thresh) tp++;
                     else fp++;
                 }
@@ -195,6 +200,11 @@ void MarkDB::Compare(int thresh)
                 for (auto k=0; k<set2.size(); k++) {
                     Histogram& h2 = set2.getHistogram(k);
                     int d = h1.Distance(h2);
+                    if(show) {
+                        std::cout << i << " " << j << " " << k << " ";
+                        std::cout << d << " " << h1.get_data()[0] << " " ;
+                        std::cout << h2.get_data()[0] << " " << thresh << std::endl;
+                    }
                     if (d<=thresh) fp++;
                     else tn++;
                 }

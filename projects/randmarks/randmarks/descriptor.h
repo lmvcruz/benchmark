@@ -29,8 +29,8 @@ public:
     std::vector<int>& get_data();
     void set_data(std::vector<int> &data);
 
-    // Este metodo devera ser mantido
     void AddData(double v);
+    void setBinValue(int b, int v);
 
     //TODO: remover o minV e maxV e usar o setRange
     void CreateBins(std::vector<double> &vec);
