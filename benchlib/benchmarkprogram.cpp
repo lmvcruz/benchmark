@@ -43,6 +43,11 @@ bool BenchmarkProgram::validate(QStringList args, QString out)
     return compare(out);
 }
 
+QString BenchmarkProgram::output()
+{
+    return m_eval->output();
+}
+
 void BenchmarkProgram::run(QString arg)
 {
     QStringList arglist = {arg};

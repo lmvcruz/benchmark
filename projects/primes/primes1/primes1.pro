@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += c++14
 CONFIG -= app_bundle
 #CONFIG -= qt
 
@@ -25,8 +25,3 @@ PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libctk.a
 LIBS += -L$$BUILD_FOLDER/libs -lfilesys
 PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libfilesys.a
 
-#LIBS += -L$$BUILD_FOLDER/libs -lstlaux
-#PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libstlaux.a
-
-#LIBS += -L$$BUILD_FOLDER/libs -lbenchmarklib
-#PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libbenchmarklib.a

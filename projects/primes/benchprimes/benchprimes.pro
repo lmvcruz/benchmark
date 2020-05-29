@@ -3,7 +3,7 @@ CONFIG += c++14
 CONFIG -= app_bundle
 #CONFIG -= qt
 
-TARGET = createdata
+TARGET = primes1
 
 ROOT_FOLDER = $$PWD/../../..
 BUILD_FOLDER = $$ROOT_FOLDER/../build
@@ -25,7 +25,19 @@ PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libctk.a
 LIBS += -L$$BUILD_FOLDER/libs -lfilesys
 PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libfilesys.a
 
-INCLUDEPATH += $$PWD/../randmarks
-DEPENDPATH += $$PWD/../randmarks
-LIBS += -L$$BUILD_FOLDER/libs -lrandmarks
-PRE_TARGETDEPS += $$BUILD_FOLDER/libs/librandmarks.a
+LIBS += -L$$BUILD_FOLDER/libs -lbenchlib
+PRE_TARGETDEPS += $$BUILD_FOLDER/libs/libbenchlib.a
+
+
+unix:!macx {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += opencv
+}
+macx: {
+    QT_CONFIG -= no-pkg-config
+    CONFIG += link_pkgconfig
+    PKG_CONFIG = /usr/local/bin/pkg-config
+    PKGCONFIG += opencv4
+    PKGCONFIG += tesseract
+    PKGCONFIG += zbar ilmbase
+}

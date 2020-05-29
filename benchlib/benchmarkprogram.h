@@ -25,6 +25,8 @@ public:
     bool validate(QString arg, QString out);
     bool validate(QStringList args, QString out);
 
+    QString output();
+
     void run(QString arg);
     void run(QStringList arg);
     int time();

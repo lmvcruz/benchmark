@@ -10,7 +10,6 @@
 
 #include "ctk/ctknumericmatrix.h"
 
-//#include "benchlib/benchmarkevaluation.h"
 #include "benchlib/benchmarkprogram.h"
 
 class BenchmarkEngine
@@ -28,8 +27,10 @@ public:
 
     void ValidateAll();
 
-    float ValidationRate();
+    //TODO: mover funcionalidade para Program
+    float ValidationRate(int idx);
 
+    //TODO: pass filename as a parameter
     void performance();
 
 private:

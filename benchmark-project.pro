@@ -1,22 +1,17 @@
 TEMPLATE=subdirs
 CONFIG += ordered
 
-#QMAKE_CXXFLAGS = "-std=c++11"
-
 SUBDIRS = \
     benchlib \
     benchmark \
-#    projects/genomicrangequery/grq1 \
-#    projects/genomicrangequery/grq2 \
-#    projects/primes/primes1 \
-#    projects/primes/primes2 \
+    projects/primes/primes1 \
+    projects/primes/primes2 \
+    projects/primes/benchprimes \
     projects/randmarks/randmarks \
-    projects/randmarks/createdata \
+    projects/randmarks/benchrand \
     projects/randmarks/quantity \
-    snippets
+    projects/randmarks/distance
 
 benchmark.depends = ../ctk/ctk ../ctk/utils/filesys
-grq1.depends = ../ctk/ctk ../ctk/utils/filesys benchmark
-grq2.depends = ../ctk/ctk ../ctk/utils/filesys benchmark
 primes1.depends = ../ctk/ctk ../ctk/utils/filesys benchmark
 primes2.depends = ../ctk/ctk ../ctk/utils/filesys benchmark

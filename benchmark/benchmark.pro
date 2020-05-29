@@ -12,13 +12,10 @@ MOC_DIR = $$BUILD_FOLDER/$$TARGET
 DESTDIR = $$BUILD_FOLDER/$$TARGET
 
 SOURCES += \
-#        auxiliar.cpp \
-#        benchmarkengine.cpp \
         main.cpp
 
 HEADERS += \
-#    auxiliar.h
-#    benchmarkengine.h
+
 
 ## Libraries
 INCLUDEPATH += $$ROOT_FOLDER $$ROOT_FOLDER/.. $$ROOT_FOLDER/../ctk

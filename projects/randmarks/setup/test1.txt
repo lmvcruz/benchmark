@@ -1,0 +1,12 @@
+{
+    "programs": [
+        "../quantity/quantity"
+    ],
+    "comparison": "STRING_EQUALS",
+    "inputs": [
+	"../../benchmark/projects/randmarks/data 000.txt 000.txt 1 1",
+	"../../benchmark/projects/randmarks/data 000.txt 001.txt 2 1",
+	"../../benchmark/projects/randmarks/data 000.txt 001.txt 2 1"
+    ],
+    "output" : ["1", "0", "1"]
+}

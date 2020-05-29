@@ -124,19 +124,15 @@ void BenchmarkEngine::read(QString filename)
     }
 }
 
-float BenchmarkEngine::ValidationRate()
+float BenchmarkEngine::ValidationRate(int idx)
 {
     int corrects = 0;
-    int count = 0;
-    for (auto i=0; i<m_programs.size(); i++) {
-        for (auto j=0; j<m_inputs.size(); j++) {
-            count++;
-            if (m_programs[i]->validate(m_inputs[j], m_stringsexpected[j])) {
-                corrects++;
-            }
+    for (auto j=0; j<m_inputs.size(); j++) {
+        if (m_programs[idx]->validate(m_inputs[j], m_stringsexpected[j])) {
+            corrects++;
         }
     }
-    return static_cast<float>(corrects)/static_cast<float>(count);
+    return static_cast<float>(corrects)/static_cast<float>(m_inputs.size());
 }
 
 void BenchmarkEngine::ValidateAll()

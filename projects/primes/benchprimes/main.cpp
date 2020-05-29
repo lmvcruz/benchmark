@@ -1,4 +1,6 @@
-#include "benchprimenums.h"
+#include <QCoreApplication>
+#include <QString>
+#include <QDebug>
 
 #include "ctk/ctkmath.h"
 
@@ -6,9 +8,40 @@
 #include "benchlib/benchmarkprogram.h"
 #include "benchlib/benchmarkengine.h"
 
+class PrimesBfEval : public BenchmarkEvaluation
+{
+private:
+
+public:
+    PrimesBfEval() : BenchmarkEvaluation() {}
+
+    void eval(QStringList args) {
+        m_time.start();
+        int qty = ctk::countPrimeNumbersBf( args[0].toInt() );
+        m_out = QString::number(qty);
+        m_procTime = m_time.elapsed();
+    }
+};
+
+class PrimesEsEval : public BenchmarkEvaluation
+{
+private:
+
+public:
+    PrimesEsEval() : BenchmarkEvaluation() {}
+
+    void eval(QStringList args) {
+        m_time.start();
+        int qty = ctk::countPrimeNumbers( args[0].toInt() );
+        m_out = QString::number(qty);
+        m_procTime = m_time.elapsed();
+    }
+};
+
+
 void evalPrimes1StringEquals()
 {
-    BenchmarkEvaluation* eval = new SystemProcessEvaluation("../primes1/primes1");
+    BenchmarkEvaluation* eval = new PrimesBfEval;
     BenchmarkProgram *prog = new StringEqualsEvaluation;
     prog->setEvaluation(eval);
     qDebug() << prog->validate("20000", "2262") << true;
@@ -22,7 +55,7 @@ void evalPrimes1StringEquals()
 
 void evalPrimes1NumberEquals()
 {
-    BenchmarkEvaluation* eval = new SystemProcessEvaluation("../primes1/primes1");
+    BenchmarkEvaluation* eval = new PrimesBfEval;
     BenchmarkProgram *prog = new NumberEqualsEvaluation;
     prog->setEvaluation(eval);
     qDebug() << prog->validate("20000", "2262") << true;
@@ -36,7 +69,7 @@ void evalPrimes1NumberEquals()
 
 void evalPrimes2StringEquals()
 {
-    BenchmarkEvaluation* eval = new SystemProcessEvaluation("../primes2/primes2");
+    BenchmarkEvaluation* eval = new PrimesEsEval;
     BenchmarkProgram *prog = new StringEqualsEvaluation;
     prog->setEvaluation(eval);
     qDebug() << prog->validate("20000", "2262") << true;
@@ -48,17 +81,16 @@ void evalPrimes2StringEquals()
     qDebug() << prog->validate("100000", "9592") << true;
 }
 
-
 void multivalPrimesStringEquals()
 {
     BenchmarkEngine engine;
     //
     BenchmarkProgram *progBf = new StringEqualsEvaluation;
-    BenchmarkEvaluation* evalBf = new SystemProcessEvaluation("../primes1/primes1");
+    BenchmarkEvaluation* evalBf = new PrimesBfEval;
     progBf->setEvaluation(evalBf);
     engine.addProgram(progBf);
     //
-    BenchmarkEvaluation* evalEs = new SystemProcessEvaluation("../primes2/primes2");
+    BenchmarkEvaluation* evalEs = new PrimesEsEval;
     BenchmarkProgram *progEs = new StringEqualsEvaluation;
     progEs->setEvaluation(evalEs);
     engine.addProgram(progEs);
@@ -80,11 +112,11 @@ void perfPrimesStringEquals()
     BenchmarkEngine engine;
     //
     BenchmarkProgram *progBf = new StringEqualsEvaluation;
-    BenchmarkEvaluation* evalBf = new SystemProcessEvaluation("../primes1/primes1");
+    BenchmarkEvaluation* evalBf = new PrimesBfEval;
     progBf->setEvaluation(evalBf);
     engine.addProgram(progBf);
     //
-    BenchmarkEvaluation* evalEs = new SystemProcessEvaluation("../primes2/primes2");
+    BenchmarkEvaluation* evalEs = new PrimesEsEval;
     BenchmarkProgram *progEs = new StringEqualsEvaluation;
     progEs->setEvaluation(evalEs);
     engine.addProgram(progEs);
@@ -97,35 +129,9 @@ void perfPrimesStringEquals()
     engine.performance();
 }
 
-class BfPnEval : public BenchmarkEvaluation
-{
-public:
-    BfPnEval() : BenchmarkEvaluation(){}
-
-    void eval(QStringList args) {
-        m_time.start();
-        int qty = ctk::countPrimeNumbersBf( args[0].toInt() );
-        m_procTime = m_time.elapsed();
-        m_out = QString::number(qty);
-    }
-};
-
-class EsPnEval : public BenchmarkEvaluation
-{
-public:
-    EsPnEval() : BenchmarkEvaluation(){}
-
-    void eval(QStringList args) {
-        m_time.start();
-        int qty = ctk::countPrimeNumbers( args[0].toInt() );
-        m_procTime = m_time.elapsed();
-        m_out = QString::number(qty);
-    }
-};
-
 void evalBfPnEvalStringEquals()
 {
-    BenchmarkEvaluation* eval = new BfPnEval;
+    BenchmarkEvaluation* eval = new PrimesBfEval;
     BenchmarkProgram *prog = new StringEqualsEvaluation;
     prog->setEvaluation(eval);
     qDebug() << prog->validate("20000", "2262") << true;
@@ -139,7 +145,7 @@ void evalBfPnEvalStringEquals()
 
 void evalEsPnEvalStringEquals()
 {
-    BenchmarkEvaluation* eval = new EsPnEval;
+    BenchmarkEvaluation* eval = new PrimesEsEval;
     BenchmarkProgram *prog = new StringEqualsEvaluation;
     prog->setEvaluation(eval);
     qDebug() << prog->validate("20000", "2262") << true;
@@ -156,11 +162,11 @@ void multivalBfEsStringEquals()
     BenchmarkEngine engine;
     //
     BenchmarkProgram *progBf = new StringEqualsEvaluation;
-    BenchmarkEvaluation* evalBf = new BfPnEval;
+    BenchmarkEvaluation* evalBf = new PrimesBfEval;
     progBf->setEvaluation(evalBf);
     engine.addProgram(progBf);
     //
-    BenchmarkEvaluation* evalEs = new EsPnEval;
+    BenchmarkEvaluation* evalEs = new PrimesEsEval;
     BenchmarkProgram *progEs = new StringEqualsEvaluation;
     progEs->setEvaluation(evalEs);
     engine.addProgram(progEs);
@@ -177,14 +183,17 @@ void multivalBfEsStringEquals()
     engine.performance();
 }
 
-void runAllPrimeNumsBench()
+int main(int argc, char *argv[])
 {
+    QCoreApplication app(argc, argv);
     evalPrimes1StringEquals();
     evalPrimes1NumberEquals();
     evalPrimes2StringEquals();
     multivalPrimesStringEquals();
-
+    //
     evalBfPnEvalStringEquals();
     evalEsPnEvalStringEquals();
     multivalBfEsStringEquals();
+    //
+    return 0;
 }

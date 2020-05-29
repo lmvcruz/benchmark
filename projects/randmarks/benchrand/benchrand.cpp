@@ -1,6 +1,7 @@
-#include "benchrandmarks.h"
+#include "benchrand.h"
 
 #include <vector>
+#include <float.h>
 
 #include "ctk/utils/filesys/filesystem.h"
 
@@ -10,6 +11,7 @@
 
 #include "randmark.h"
 
+//TODO: improve the management of files (no global variables)
 QVector<QString> files;
 
 
@@ -52,7 +54,7 @@ float ValidationAllMarksQuantityDesc(int thresh)
     files = createFileList(dirdb, "txt");
     //
     BenchmarkEngine engine;
-    BenchmarkProgram *progQty = new StringEqualsEvaluation;
+    BenchmarkProgram *progQty = new StringEqualsCompProg;
     BenchmarkEvaluation* evalQty = new QuantityRmEval;
     progQty->setEvaluation(evalQty);
     engine.addProgram(progQty);
@@ -60,6 +62,8 @@ float ValidationAllMarksQuantityDesc(int thresh)
     for (auto i=0; i<files.size(); i++) {
         for (auto j=0; j<files.size(); j++) {
             if (i==j) {
+                //TODO: improve the control of this constant
+                // (defined in other class :o)
                 for (auto k=1; k<5; k++) {
                     QStringList args;
                     args << QString::number(i)
@@ -81,7 +85,7 @@ float ValidationAllMarksQuantityDesc(int thresh)
             }
         }
     }
-    float rate = engine.ValidationRate();
+    float rate = engine.ValidationRate(0);
     return rate;
 }
 
@@ -124,7 +128,7 @@ float ValidationAllMarksDistanceDesc(int thresh)
     files = createFileList(dirdb, "txt");
     //
     BenchmarkEngine engine;
-    BenchmarkProgram *progQty = new StringEqualsEvaluation;
+    BenchmarkProgram *progQty = new StringEqualsCompProg;
     BenchmarkEvaluation* evalQty = new DistanceRmEval;
     progQty->setEvaluation(evalQty);
     engine.addProgram(progQty);
@@ -153,10 +157,11 @@ float ValidationAllMarksDistanceDesc(int thresh)
             }
         }
     }
-    float rate = engine.ValidationRate();
+    float rate = engine.ValidationRate(0);
     return rate;
 }
 
+//TODO: use functors to avoid code duplication
 void CrossValidationQuantity()
 {
     int bthresh = -1;
@@ -192,8 +197,8 @@ void CrossValidationDistance()
 
 void runAllRandomMarksBench()
 {
-//    ValidationAllMarksQuantityDesc(30);
-//    ValidationAllMarksDistanceDesc(100);
-    CrossValidationQuantity();
+    qDebug() << ValidationAllMarksQuantityDesc(1);
+    qDebug() << ValidationAllMarksDistanceDesc(80);
+//    CrossValidationQuantity();
     CrossValidationDistance();
 }
