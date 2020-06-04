@@ -8,6 +8,71 @@
 #include "benchlib/benchmarkprogram.h"
 #include "benchlib/benchmarkengine.h"
 
+//
+// Test Cases based on system call (SystemProcessEvaluation)
+// Primes1: Brute Force;
+// Primes 2: Erastotenes Sieve)
+//
+void evalPrimes1StringEquals()
+{
+    BenchmarkEvaluation* eval = new SystemProcessEvaluation("../primes1/primes1");
+    BenchmarkProgram *prog = new StringEqualsCompProg(eval);
+    qDebug() << prog->Validate("20000", "2262") << true;
+    qDebug() << prog->Validate("20000", "1") << false;
+    qDebug() << prog->Validate("40000", "4203") << true;
+    qDebug() << prog->Validate("40000", "1") << false;
+    qDebug() << prog->Validate("60000", "6057") << true;
+    qDebug() << prog->Validate("80000", "7837") << true;
+    qDebug() << prog->Validate("100000", "9592") << true;
+}
+
+void evalPrimes1NumberEquals()
+{
+    BenchmarkEvaluation* eval = new SystemProcessEvaluation("../primes2/primes2");
+    BenchmarkProgram *prog = new StringEqualsCompProg(eval);
+    qDebug() << prog->Validate("20000", "2262") << true;
+    qDebug() << prog->Validate("20000", "1") << false;
+    qDebug() << prog->Validate("40000", "4203") << true;
+    qDebug() << prog->Validate("40000", "1") << false;
+    qDebug() << prog->Validate("60000", "6057") << true;
+    qDebug() << prog->Validate("80000", "7837") << true;
+    qDebug() << prog->Validate("100000", "9592") << true;
+}
+
+void evalPrimes2StringEquals()
+{
+    BenchmarkEvaluation* eval = new SystemProcessEvaluation("../primes2/primes2");
+    BenchmarkProgram *prog = new StringEqualsCompProg(eval);
+    qDebug() << prog->Validate("20000", "2262") << true;
+    qDebug() << prog->Validate("20000", "1") << false;
+    qDebug() << prog->Validate("40000", "4203") << true;
+    qDebug() << prog->Validate("40000", "1") << false;
+    qDebug() << prog->Validate("60000", "6057") << true;
+    qDebug() << prog->Validate("80000", "7837") << true;
+    qDebug() << prog->Validate("100000", "9592") << true;
+}
+
+void multivalPrimesStringEquals()
+{
+    BenchmarkEngine engine;
+    engine.add_program( new StringEqualsCompProg(new SystemProcessEvaluation("../primes1/primes1")) );
+    engine.add_program( new StringEqualsCompProg(new SystemProcessEvaluation("../primes2/primes2")) );
+    //
+    QVector<QString> ins = {"20000", "20000", "40000", "40000", "60000", "80000", "100000"};
+    QVector<QString> outs = {"2262", "1", "4203", "1", "6057", "7837", "9592"};
+    engine.add_instances(ins, outs);
+    // Show validatio if each
+    engine.ValidateAll();
+    // Show the overall validation rate
+    qDebug() << engine.ValidationRate(0);
+    // save a CSV file with the execution time
+    engine.EvalPerformance("primes-system.csv");
+}
+
+//
+// Test Cases based on classes that inherit from BenchmarkEvaluation
+//  Using Benchmark Library
+//
 class PrimesBfEval : public BenchmarkEvaluation
 {
 private:
@@ -38,149 +103,47 @@ public:
     }
 };
 
-
-void evalPrimes1StringEquals()
-{
-    BenchmarkEvaluation* eval = new PrimesBfEval;
-    BenchmarkProgram *prog = new StringEqualsEvaluation;
-    prog->setEvaluation(eval);
-    qDebug() << prog->validate("20000", "2262") << true;
-    qDebug() << prog->validate("20000", "1") << false;
-    qDebug() << prog->validate("40000", "4203") << true;
-    qDebug() << prog->validate("40000", "1") << false;
-    qDebug() << prog->validate("60000", "6057") << true;
-    qDebug() << prog->validate("80000", "7837") << true;
-    qDebug() << prog->validate("100000", "9592") << true;
-}
-
-void evalPrimes1NumberEquals()
-{
-    BenchmarkEvaluation* eval = new PrimesBfEval;
-    BenchmarkProgram *prog = new NumberEqualsEvaluation;
-    prog->setEvaluation(eval);
-    qDebug() << prog->validate("20000", "2262") << true;
-    qDebug() << prog->validate("20000", "1") << false;
-    qDebug() << prog->validate("40000", "4203") << true;
-    qDebug() << prog->validate("40000", "1") << false;
-    qDebug() << prog->validate("60000", "6057") << true;
-    qDebug() << prog->validate("80000", "7837") << true;
-    qDebug() << prog->validate("100000", "9592") << true;
-}
-
-void evalPrimes2StringEquals()
-{
-    BenchmarkEvaluation* eval = new PrimesEsEval;
-    BenchmarkProgram *prog = new StringEqualsEvaluation;
-    prog->setEvaluation(eval);
-    qDebug() << prog->validate("20000", "2262") << true;
-    qDebug() << prog->validate("20000", "1") << false;
-    qDebug() << prog->validate("40000", "4203") << true;
-    qDebug() << prog->validate("40000", "1") << false;
-    qDebug() << prog->validate("60000", "6057") << true;
-    qDebug() << prog->validate("80000", "7837") << true;
-    qDebug() << prog->validate("100000", "9592") << true;
-}
-
-void multivalPrimesStringEquals()
-{
-    BenchmarkEngine engine;
-    //
-    BenchmarkProgram *progBf = new StringEqualsEvaluation;
-    BenchmarkEvaluation* evalBf = new PrimesBfEval;
-    progBf->setEvaluation(evalBf);
-    engine.addProgram(progBf);
-    //
-    BenchmarkEvaluation* evalEs = new PrimesEsEval;
-    BenchmarkProgram *progEs = new StringEqualsEvaluation;
-    progEs->setEvaluation(evalEs);
-    engine.addProgram(progEs);
-    //
-    engine.addInstance("20000", "2262");
-    engine.addInstance("20000", "1");
-    engine.addInstance("40000", "4203");
-    engine.addInstance("40000", "1");
-    engine.addInstance("60000", "6057");
-    engine.addInstance("80000", "7837");
-    engine.addInstance("100000", "9592");
-    engine.ValidateAll();
-    qDebug() << engine.ValidationRate();
-    engine.performance();
-}
-
-void perfPrimesStringEquals()
-{
-    BenchmarkEngine engine;
-    //
-    BenchmarkProgram *progBf = new StringEqualsEvaluation;
-    BenchmarkEvaluation* evalBf = new PrimesBfEval;
-    progBf->setEvaluation(evalBf);
-    engine.addProgram(progBf);
-    //
-    BenchmarkEvaluation* evalEs = new PrimesEsEval;
-    BenchmarkProgram *progEs = new StringEqualsEvaluation;
-    progEs->setEvaluation(evalEs);
-    engine.addProgram(progEs);
-    //
-    engine.addArg("20000");
-    engine.addArg("40000");
-    engine.addArg("60000");
-    engine.addArg("80000");
-    engine.addArg("100000");
-    engine.performance();
-}
-
 void evalBfPnEvalStringEquals()
 {
-    BenchmarkEvaluation* eval = new PrimesBfEval;
-    BenchmarkProgram *prog = new StringEqualsEvaluation;
-    prog->setEvaluation(eval);
-    qDebug() << prog->validate("20000", "2262") << true;
-    qDebug() << prog->validate("20000", "1") << false;
-    qDebug() << prog->validate("40000", "4203") << true;
-    qDebug() << prog->validate("40000", "1") << false;
-    qDebug() << prog->validate("60000", "6057") << true;
-    qDebug() << prog->validate("80000", "7837") << true;
-    qDebug() << prog->validate("100000", "9592") << true;
+    BenchmarkProgram *prog = new StringEqualsCompProg(new PrimesBfEval);
+    qDebug() << prog->Validate("20000", "2262") << true;
+    qDebug() << prog->Validate("20000", "1") << false;
+    qDebug() << prog->Validate("40000", "4203") << true;
+    qDebug() << prog->Validate("40000", "1") << false;
+    qDebug() << prog->Validate("60000", "6057") << true;
+    qDebug() << prog->Validate("80000", "7837") << true;
+    qDebug() << prog->Validate("100000", "9592") << true;
 }
 
 void evalEsPnEvalStringEquals()
 {
     BenchmarkEvaluation* eval = new PrimesEsEval;
-    BenchmarkProgram *prog = new StringEqualsEvaluation;
-    prog->setEvaluation(eval);
-    qDebug() << prog->validate("20000", "2262") << true;
-    qDebug() << prog->validate("20000", "1") << false;
-    qDebug() << prog->validate("40000", "4203") << true;
-    qDebug() << prog->validate("40000", "1") << false;
-    qDebug() << prog->validate("60000", "6057") << true;
-    qDebug() << prog->validate("80000", "7837") << true;
-    qDebug() << prog->validate("100000", "9592") << true;
+    BenchmarkProgram *prog = new StringEqualsCompProg;
+    prog->set_evaluation(eval);
+    qDebug() << prog->Validate("20000", "2262") << true;
+    qDebug() << prog->Validate("20000", "1") << false;
+    qDebug() << prog->Validate("40000", "4203") << true;
+    qDebug() << prog->Validate("40000", "1") << false;
+    qDebug() << prog->Validate("60000", "6057") << true;
+    qDebug() << prog->Validate("80000", "7837") << true;
+    qDebug() << prog->Validate("100000", "9592") << true;
 }
 
 void multivalBfEsStringEquals()
 {
     BenchmarkEngine engine;
+    engine.add_program( new StringEqualsCompProg(new PrimesBfEval) );
+    engine.add_program( new StringEqualsCompProg(new PrimesEsEval) );
     //
-    BenchmarkProgram *progBf = new StringEqualsEvaluation;
-    BenchmarkEvaluation* evalBf = new PrimesBfEval;
-    progBf->setEvaluation(evalBf);
-    engine.addProgram(progBf);
-    //
-    BenchmarkEvaluation* evalEs = new PrimesEsEval;
-    BenchmarkProgram *progEs = new StringEqualsEvaluation;
-    progEs->setEvaluation(evalEs);
-    engine.addProgram(progEs);
-    //
-    engine.addInstance("20000", "2262");
-    engine.addInstance("20000", "1");
-    engine.addInstance("40000", "4203");
-    engine.addInstance("40000", "1");
-    engine.addInstance("60000", "6057");
-    engine.addInstance("80000", "7837");
-    engine.addInstance("100000", "9592");
+    QVector<QString> ins = {"20000", "20000", "40000", "40000", "60000", "80000", "100000"};
+    QVector<QString> outs = {"2262", "1", "4203", "1", "6057", "7837", "9592"};
+    engine.add_instances(ins, outs);
+    // Show validatio if each
     engine.ValidateAll();
-    qDebug() << engine.ValidationRate();
-    engine.performance();
+    // Show the overall validation rate
+    qDebug() << engine.ValidationRate(0);
+    // save a CSV file with the execution time
+    engine.EvalPerformance("primes-benchlib.csv");
 }
 
 int main(int argc, char *argv[])

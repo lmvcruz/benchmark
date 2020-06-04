@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QVector>
 #include <QString>
+#include <QFileInfo>
 
 #include "ctk/utils/filesys/filesystem.h"
 
@@ -62,8 +63,6 @@ void createRandomMarkDb()
     db.Create(50, 5);
     db.Save("../../benchmark/projects/randmarks/data");
 }
-
-#include <QFileInfo>
 
 void createSetupFile()
 {

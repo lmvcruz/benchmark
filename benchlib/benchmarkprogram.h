@@ -12,47 +12,46 @@ protected:
     BenchmarkEvaluation *m_eval;
     QVector<QStringList> m_args;
     QVector<QString> m_expectedOutput;
-    bool m_valid;
 
 public:
     BenchmarkProgram();
+    BenchmarkProgram(BenchmarkEvaluation *eval);
 
-    void setEvaluation(BenchmarkEvaluation *eval);
+    void set_evaluation(BenchmarkEvaluation *eval);
 
-    void addInstance(QString arg, QString out);
-    void addInstance(QStringList args, QString out);
+    QString ProgramName();
 
-    bool validate(QString arg, QString out);
-    bool validate(QStringList args, QString out);
+    void add_instance(QString arg, QString out);
+    void add_instance(QStringList args, QString out);
+
+    bool Validate(QString arg, QString out);
+    bool Validate(QStringList args, QString out);
 
     QString output();
 
-    void run(QString arg);
-    void run(QStringList arg);
+    void Run(QString arg);
+    void Run(QStringList arg);
     int time();
 
-    virtual bool compare(QString out) = 0;
-protected:
+    virtual bool Compare(QString out) = 0;
 };
 
-class StringEqualsEvaluation : public BenchmarkProgram
+class StringEqualsCompProg : public BenchmarkProgram
 {
 public:
-    StringEqualsEvaluation();
+    StringEqualsCompProg();
+    StringEqualsCompProg(BenchmarkEvaluation *eval);
 
-    bool compare(QString out);
-
-protected:
+    bool Compare(QString out);
 };
 
-class NumberEqualsEvaluation : public BenchmarkProgram
+class NumberEqualsCompProg : public BenchmarkProgram
 {
 public:
-    NumberEqualsEvaluation();
+    NumberEqualsCompProg();
+    NumberEqualsCompProg(BenchmarkEvaluation *eval);
 
-    bool compare(QString out);
-
-protected:
+    bool Compare(QString out);
 };
 
 #endif // BENCHMARKPROGRAM_H

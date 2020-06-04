@@ -28,35 +28,49 @@ void saveCsvFile(ctk::NumericMatrix &mat, QString filename)
     }
 }
 
-void BenchmarkEngine::addProgram(BenchmarkProgram *p)
+void BenchmarkEngine::add_program(BenchmarkProgram *p)
 {
     m_programs.push_back(p);
 }
 
-void BenchmarkEngine::addArg(QString in)
+void BenchmarkEngine::add_arg(QString in)
 {
     QStringList arg = {in};
     m_inputs.push_back(arg);
 }
 
-void BenchmarkEngine::addArg(QStringList in)
+void BenchmarkEngine::add_arg(QStringList in)
 {
     m_inputs.push_back(in);
 }
 
-void BenchmarkEngine::addInstance(QString in, QString out)
+void BenchmarkEngine::add_args(QVector<QString> args)
 {
-    addArg(in);
+    for (auto &a: args) add_arg(a);
+}
+
+void BenchmarkEngine::add_instance(QString in, QString out)
+{
+    add_arg(in);
     m_stringsexpected.push_back(out);
 }
 
-void BenchmarkEngine::addInstance(QStringList in, QString out)
+void BenchmarkEngine::add_instance(QStringList in, QString out)
 {
-    addArg(in);
+    add_arg(in);
     m_stringsexpected.push_back(out);
 }
 
-void BenchmarkEngine::read(QString filename)
+void BenchmarkEngine::add_instances(QVector<QString> ins, QVector<QString> outs)
+{
+    //TODO: replace to an exception
+    assert(ins.size()==outs.size());
+    for (auto i=0; i<ins.size(); i++) {
+        add_instance(ins[i], outs[i]);
+    }
+}
+
+void BenchmarkEngine::Read(QString filename)
 {
     QFile readFile(filename);
     if (!readFile.open(QIODevice::ReadOnly))
@@ -75,10 +89,10 @@ void BenchmarkEngine::read(QString filename)
     if ( json.contains("programs") ) {
         inputsJsonArray = json["programs"].toArray();
     }
-    else {
-        qDebug() << "Invalid JSON!!! Missing <programs> attribute.";
-        std::raise(SIGABRT);
-    }
+//    else {
+//        qDebug() << "Invalid JSON!!! Missing <programs> attribute.";
+//        std::raise(SIGABRT);
+//    }
     // Initialize all programs and their evaluation
     if ( json.contains("comparison") ) {
         m_programs.clear();
@@ -89,8 +103,8 @@ void BenchmarkEngine::read(QString filename)
             for (int i=0; i<inputsJsonArray.size(); i++) {
                 QString exec = inputsJsonArray[i].toString();
                 BenchmarkEvaluation* eval = new SystemProcessEvaluation(exec);
-                m_programs[i] = new StringEqualsEvaluation;
-                m_programs[i]->setEvaluation(eval);
+                m_programs[i] = new StringEqualsCompProg;
+                m_programs[i]->set_evaluation(eval);
             }
         }
         else {
@@ -128,7 +142,7 @@ float BenchmarkEngine::ValidationRate(int idx)
 {
     int corrects = 0;
     for (auto j=0; j<m_inputs.size(); j++) {
-        if (m_programs[idx]->validate(m_inputs[j], m_stringsexpected[j])) {
+        if (m_programs[idx]->Validate(m_inputs[j], m_stringsexpected[j])) {
             corrects++;
         }
     }
@@ -139,7 +153,7 @@ void BenchmarkEngine::ValidateAll()
 {
     for (auto i=0; i<m_programs.size(); i++) {
         for (auto j=0; j<m_inputs.size(); j++) {
-            if (m_programs[i]->validate(m_inputs[j], m_stringsexpected[j])) {
+            if (m_programs[i]->Validate(m_inputs[j], m_stringsexpected[j])) {
                 qDebug() << "Arg:" << i << j << "is VALID!!!";
             }
             else {
@@ -149,17 +163,16 @@ void BenchmarkEngine::ValidateAll()
     }
 }
 
-void BenchmarkEngine::performance()
+void BenchmarkEngine::EvalPerformance(QString csvname)
 {
     ctk::NumericMatrix timeMatrix;
     timeMatrix.Create(m_programs.size(), m_inputs.size());
     for (auto i=0; i<m_programs.size(); i++) {
         BenchmarkProgram *prog = m_programs[i];
         for (auto j=0; j<m_inputs.size(); j++) {
-            prog->run(m_inputs[j]);
+            prog->Run(m_inputs[j]);
             timeMatrix.set(i, j, prog->time());
         }
     }
-    //TODO: add filename
-    saveCsvFile(timeMatrix, "test.csv");
+    saveCsvFile(timeMatrix, csvname);
 }

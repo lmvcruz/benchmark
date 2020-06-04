@@ -20,9 +20,7 @@ public:
     SetMark &get(int i);
 
     void Open(QString dirdb);
-
     void Save(QString dirdb);
-
     void Create(int dbSize, int setSize);
 
 private:

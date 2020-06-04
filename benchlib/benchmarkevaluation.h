@@ -21,12 +21,13 @@ public:
     BenchmarkEvaluation(QObject *par = nullptr);
     virtual ~BenchmarkEvaluation();
 
+    virtual QString name();
+
+    void Run(QStringList args);
     QString output();
     int time();
 
-    virtual void eval(QStringList args) = 0;
-
-    void run(QStringList args);
+    virtual void Eval(QStringList args) = 0;
 };
 
 class SystemProcessEvaluation : public BenchmarkEvaluation
@@ -42,7 +43,9 @@ public:
     SystemProcessEvaluation(QString exec, QObject *par = nullptr);
     virtual ~SystemProcessEvaluation();
 
-    void eval(QStringList args);
+    QString name();
+
+    void Eval(QStringList args);
 
 public slots:
     void finished();

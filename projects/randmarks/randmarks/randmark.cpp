@@ -140,7 +140,6 @@ void Descriptor::setRange(int bins, double minV, double maxV)
 // QuantityDescriptor Class
 //
 QuantityDescriptor::QuantityDescriptor(){
-    // FIX_IT: inicializar o maxrange de forma apropriada (generica)
 }
 
 Histogram QuantityDescriptor::Calculate(SampleMark &mark)
@@ -245,7 +244,6 @@ void SampleMark::createUniformSampleMark(int qty, double xmin, double xmax, doub
     coords.resize(qty);
     for(int i=0; i<qty; i++) {
         // valor random entre xmin e xmax, ymin e ymax
-
         double x = randFloat()*(xmax - xmin) + xmin;
         double y = randFloat()*(ymax - ymin) + ymin;
         double z = randFloat()*(zmax - zmin) + zmin;

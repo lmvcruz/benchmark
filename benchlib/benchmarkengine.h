@@ -17,24 +17,29 @@ class BenchmarkEngine
 public:
     BenchmarkEngine() = default;
 
-    void addProgram(BenchmarkProgram* p);
-    void addArg(QString in);
-    void addArg(QStringList in);
-    void addInstance(QString in, QString out);
-    void addInstance(QStringList in, QString out);
+    void add_program(BenchmarkProgram* p);
+    void add_arg(QString in);
+    void add_arg(QStringList in);
+    void add_args(QVector<QString> args);
 
-    void read(QString filename);
+    void add_instance(QString in, QString out);
+    void add_instance(QStringList in, QString out);
+    void add_instances(QVector<QString> ins, QVector<QString> outs);
+
+    void Read(QString filename);
 
     void ValidateAll();
 
     //TODO: mover funcionalidade para Program
     float ValidationRate(int idx);
 
-    //TODO: pass filename as a parameter
-    void performance();
+    void EvalPerformance(QString csvname);
 
 private:
     QVector<BenchmarkProgram*> m_programs;
+    //TODO: evaluate where to storage this values (here or in program)
+    // should be in program, but it creates a problem when the json has only io
+    // and the program is passed as a parameter
     QVector<QStringList> m_inputs;
     QVector<QString> m_stringsexpected;
 };

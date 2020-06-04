@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
     Histogram h2 = desc->Calculate(val.get(smp));
     //
     int thresh = args[4].toInt();
+    //TODO: remove parameter from JSON file
+    // this paramater should be calculated by cross validation
     thresh = 80;
     //
     int d = h1.Distance(h2);

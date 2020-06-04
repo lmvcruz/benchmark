@@ -28,6 +28,11 @@ int BenchmarkEvaluation::time()
     return m_procTime;
 }
 
+QString BenchmarkEvaluation::name()
+{
+    return "Abstract Program";
+}
+
 void BenchmarkEvaluation::run(QStringList args)
 {
     m_time.start();
@@ -60,6 +65,11 @@ SystemProcessEvaluation::SystemProcessEvaluation(QString exec, QObject *par)
 SystemProcessEvaluation::~SystemProcessEvaluation()
 {
 
+}
+
+QString SystemProcessEvaluation::name()
+{
+    return m_exec;
 }
 
 void SystemProcessEvaluation::eval(QStringList args)

@@ -76,6 +76,7 @@ public:
     Histogram Calculate(SampleMark &mark);
 };
 
+//TODO: eval AnchorAngleDescriptor
 // Particle Angle descriptor
 class AnchorAngleDescriptor: public Descriptor{
 public:
@@ -85,6 +86,7 @@ public:
     Histogram Calculate(SampleMark &mark);
 };
 
+//TODO: eval NeighborhoodDescriptor
 // particle Neighbor Descriptor
 class NeighborhoodDescriptor: public Descriptor{
 private:

@@ -3,7 +3,7 @@ CONFIG += c++14
 CONFIG -= app_bundle
 #CONFIG -= qt
 
-TARGET = primes1
+TARGET = benchprimes
 
 ROOT_FOLDER = $$PWD/../../..
 BUILD_FOLDER = $$ROOT_FOLDER/../build
