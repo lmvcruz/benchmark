@@ -19,7 +19,7 @@ public:
 
     void set_evaluation(BenchmarkEvaluation *eval);
 
-    QString ProgramName();
+    QString program_name();
 
     void add_instance(QString arg, QString out);
     void add_instance(QStringList args, QString out);

@@ -22,7 +22,7 @@ void BenchmarkProgram::set_evaluation(BenchmarkEvaluation *eval)
     m_eval = eval;
 }
 
-QString BenchmarkProgram::ProgramName()
+QString BenchmarkProgram::program_name()
 {
     return m_eval->name();
 }
@@ -43,13 +43,13 @@ void BenchmarkProgram::add_instance(QStringList args, QString out)
 bool BenchmarkProgram::Validate(QString arg, QString out)
 {
     QStringList args = {arg};
-    m_eval->run(args);
+    m_eval->Run(args);
     return Compare(out);
 }
 
 bool BenchmarkProgram::Validate(QStringList args, QString out)
 {
-    m_eval->run(args);
+    m_eval->Run(args);
     return Compare(out);
 }
 
@@ -61,12 +61,12 @@ QString BenchmarkProgram::output()
 void BenchmarkProgram::Run(QString arg)
 {
     QStringList arglist = {arg};
-    m_eval->run(arglist);
+    m_eval->Run(arglist);
 }
 
 void BenchmarkProgram::Run(QStringList arg)
 {
-    m_eval->run(arg);
+    m_eval->Run(arg);
 }
 
 int BenchmarkProgram::time()

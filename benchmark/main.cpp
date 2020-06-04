@@ -8,7 +8,7 @@
 
 using namespace std;
 
-
+// TODO: TEST IT WITH SEVERAL JSONS
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 //        QString args = "../../benchmark/projects/primes/setup/primes1_val.txt";
 //        QString args = "../../benchmark/projects/randmarks/setup/test1.txt";
         QString args = "../../benchmark/projects/randmarks/setup/full.txt";
-        engine.read(args);
+        engine.Read(args);
 //        engine.ValidateAll();
 //        engine.performance();
         qDebug() << engine.ValidationRate(0);

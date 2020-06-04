@@ -80,7 +80,7 @@ private:
 public:
     PrimesBfEval() : BenchmarkEvaluation() {}
 
-    void eval(QStringList args) {
+    void Eval(QStringList args) {
         m_time.start();
         int qty = ctk::countPrimeNumbersBf( args[0].toInt() );
         m_out = QString::number(qty);
@@ -95,7 +95,7 @@ private:
 public:
     PrimesEsEval() : BenchmarkEvaluation() {}
 
-    void eval(QStringList args) {
+    void Eval(QStringList args) {
         m_time.start();
         int qty = ctk::countPrimeNumbers( args[0].toInt() );
         m_out = QString::number(qty);

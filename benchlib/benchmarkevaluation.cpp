@@ -18,6 +18,17 @@ BenchmarkEvaluation::~BenchmarkEvaluation()
 
 }
 
+QString BenchmarkEvaluation::name()
+{
+    return "Abstract Program";
+}
+
+void BenchmarkEvaluation::Run(QStringList args)
+{
+    m_time.start();
+    Eval(args);
+}
+
 QString BenchmarkEvaluation::output()
 {
     return m_out;
@@ -26,17 +37,6 @@ QString BenchmarkEvaluation::output()
 int BenchmarkEvaluation::time()
 {
     return m_procTime;
-}
-
-QString BenchmarkEvaluation::name()
-{
-    return "Abstract Program";
-}
-
-void BenchmarkEvaluation::run(QStringList args)
-{
-    m_time.start();
-    eval(args);
 }
 
 //
@@ -72,7 +72,7 @@ QString SystemProcessEvaluation::name()
     return m_exec;
 }
 
-void SystemProcessEvaluation::eval(QStringList args)
+void SystemProcessEvaluation::Eval(QStringList args)
 {
     if (checkFile(m_exec)) {
         m_out = "";
