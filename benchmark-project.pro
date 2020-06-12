@@ -8,7 +8,7 @@ SUBDIRS = \
 #    projects/primes/primes2 \
 #    projects/primes/benchprimes \
 #    projects/randmarks/randmarks \
-#    projects/randmarks/benchrand \
+    projects/randmarks/benchrand \
 #    projects/randmarks/quantity \
 #    projects/randmarks/distance
 

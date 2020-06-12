@@ -22,11 +22,16 @@ public:
 
     QString program_name();
 
+    void Clear();
+    int CasesQuantities();
+
     void add_instance(QString arg, QString out);
     void add_instance(QStringList args, QString out);
 
+
     bool Validate(QString arg, QString out);
     bool Validate(QStringList args, QString out);
+    bool ValidateCase(int idx);
 
     QString output();
 
@@ -35,6 +40,10 @@ public:
     int time();
 
     virtual bool Compare(QString out) = 0;
+
+    float ValidationRate();
+    int EvalCasePerformance(int idx);
+    int EvalFullPerformance();
 };
 
 class StringEqualsCompProg : public BenchmarkProgram

@@ -32,6 +32,17 @@ QString BenchmarkProgram::program_name()
     return m_eval->name();
 }
 
+void BenchmarkProgram::Clear()
+{
+    m_args.clear();
+    m_expectedOutput.clear();
+}
+
+int BenchmarkProgram::CasesQuantities()
+{
+    return m_args.size();
+}
+
 void BenchmarkProgram::add_instance(QString arg, QString out)
 {
     QStringList args = {arg};
@@ -58,6 +69,12 @@ bool BenchmarkProgram::Validate(QStringList args, QString out)
     return Compare(out);
 }
 
+bool BenchmarkProgram::ValidateCase(int idx)
+{
+    m_eval->Run(m_args[idx]);
+    return Compare(m_expectedOutput[idx]);
+}
+
 QString BenchmarkProgram::output()
 {
     return m_eval->output();
@@ -77,6 +94,37 @@ void BenchmarkProgram::Run(QStringList arg)
 int BenchmarkProgram::time()
 {
     return m_eval->time();
+}
+
+float BenchmarkProgram::ValidationRate()
+{
+    int corrects = 0;
+    for (auto j=0; j<m_args.size(); j++) {
+        try {
+            if (Validate(m_args[j], m_expectedOutput[j])) {
+                corrects++;
+            }
+        } catch (std::exception&) {
+            //It is not necessary catch this exception
+        }
+    }
+    return static_cast<float>(corrects)/static_cast<float>(m_args.size());
+
+}
+
+int BenchmarkProgram::EvalCasePerformance(int idx)
+{
+    Run(m_args[idx]);
+    return time();
+}
+
+int BenchmarkProgram::EvalFullPerformance()
+{
+    int spent_time = 0;
+    for (auto j=0; j<m_args.size(); j++) {
+        spent_time += EvalCasePerformance(j);
+    }
+    return spent_time;
 }
 
 //
