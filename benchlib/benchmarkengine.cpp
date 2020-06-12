@@ -168,6 +168,7 @@ void BenchmarkEngine::ValidateAll()
             else {
                 qDebug() << "Arg:" << i << j << "is NOT valid.";
             }
+//            qDebug() << m_stringsexpected[j] << m_programs[i]->output();
         }
     }
 }
