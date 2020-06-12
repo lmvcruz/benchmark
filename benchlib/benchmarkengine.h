@@ -16,6 +16,7 @@ class BenchmarkEngine
 {
 public:
     BenchmarkEngine() = default;
+    ~BenchmarkEngine();
 
     void add_program(BenchmarkProgram* p);
     void add_arg(QString in);

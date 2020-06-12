@@ -3,10 +3,10 @@ CONFIG += ordered
 
 SUBDIRS = \
     benchlib \
-#    benchmark \
-#    projects/primes/primes1 \
-#    projects/primes/primes2 \
-#    projects/primes/benchprimes \
+    benchmark \
+    projects/primes/primes1 \
+    projects/primes/primes2 \
+    projects/primes/benchprimes \
     projects/randmarks/randmarks \
     projects/randmarks/benchrand \
     projects/randmarks/quantity \

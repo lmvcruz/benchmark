@@ -1,9 +1,7 @@
 #include "benchrand.h"
 
-#include <vector>
+#include <iostream>
 #include <float.h>
-
-#include "ctk/utils/filesys/filesystem.h"
 
 #include "benchlib/benchmarkevaluation.h"
 #include "benchlib/benchmarkprogram.h"
@@ -11,38 +9,45 @@
 
 #include "randmark.h"
 
-//TODO: improve the management of files (no global variables)
-QVector<QString> files;
-
-
 class QuantityRmEval : public BenchmarkEvaluation
 {
 private:
     Descriptor* desc;
+    int m_thresh;
 
 public:
-    QuantityRmEval() : BenchmarkEvaluation(){
+    QuantityRmEval(int t) : BenchmarkEvaluation(){
+        m_thresh = t;
         desc = new QuantityDescriptor;
         desc->setRange(1, 0, 1);
     }
 
-    void eval(QStringList args) {
-        int sreg = args[0].toInt();
+    virtual ~QuantityRmEval() {
+        if (desc!=nullptr) delete desc;
+    }
+
+
+    QString name() override {
+        return "QuantityRmEval";
+    }
+
+    void Eval(QStringList args_non) {
+        QStringList args = args_non[0].split(" ");
+        QString dirdata = args[0];
+        QString sreg = dirdata +"/"+ args[1];
         SetMark reg;
-        reg.Open(files[sreg]);
+        reg.Open(sreg);
         Histogram h1 = desc->Calculate(reg.get(0));
         //
-        int sval = args[1].toInt();
+        QString sval = dirdata +"/"+ args[2];
         SetMark val;
-        val.Open(files[sval]);
-        int smp = args[2].toInt();
+        val.Open(sval);
+        int smp = args[3].toInt();
         Histogram h2 = desc->Calculate(val.get(smp));
-        //
-        int thresh = args[3].toInt();
         //
         m_time.start();
         int d = h1.Distance(h2);
-        if (d<=thresh) m_out = "1";
+        if (d<=m_thresh) m_out = "1";
         else m_out = "0";
         m_procTime = m_time.elapsed();
     }
@@ -50,73 +55,46 @@ public:
 
 float ValidationAllMarksQuantityDesc(int thresh)
 {
-    QString dirdb = "../../benchmark/projects/randmarks/data";
-    files = createFileList(dirdb, "txt");
-    //
     BenchmarkEngine engine;
-    BenchmarkProgram *progQty = new StringEqualsCompProg;
-    BenchmarkEvaluation* evalQty = new QuantityRmEval;
-    progQty->setEvaluation(evalQty);
-    engine.addProgram(progQty);
-    //
-    for (auto i=0; i<files.size(); i++) {
-        for (auto j=0; j<files.size(); j++) {
-            if (i==j) {
-                //TODO: improve the control of this constant
-                // (defined in other class :o)
-                for (auto k=1; k<5; k++) {
-                    QStringList args;
-                    args << QString::number(i)
-                         << QString::number(j)
-                         << QString::number(k)
-                         << QString::number(thresh);
-                    engine.addInstance(args, "1");
-                }
-            }
-            else {
-                for (auto k=0; k<5; k++) {
-                    QStringList args;
-                    args << QString::number(i)
-                         << QString::number(j)
-                         << QString::number(k)
-                         << QString::number(thresh);
-                    engine.addInstance(args, "0");
-                }
-            }
-        }
-    }
-    float rate = engine.ValidationRate(0);
-    return rate;
+    engine.Read("../../benchmark/projects/randmarks/setup/full.txt");
+    engine.add_program( new StringEqualsCompProg(new QuantityRmEval(thresh)) );
+    return engine.ValidationRate(0);
 }
 
 class DistanceRmEval : public BenchmarkEvaluation
 {
 private:
     Descriptor* desc;
+    int m_thresh;
 
 public:
-    DistanceRmEval() : BenchmarkEvaluation(){
+    DistanceRmEval(int t) : BenchmarkEvaluation(){
+        m_thresh = t;
         desc = new DistanceDescriptor;
-        desc->setRange(151, 0., 150.0);
+        desc->setRange(300, 0., 100.0);
     }
 
-    void eval(QStringList args) {
-        int sreg = args[0].toInt();
+    virtual ~DistanceRmEval() {
+        if (desc!=nullptr) delete desc;
+    }
+
+    void Eval(QStringList args_non) {
+        QStringList args = args_non[0].split(" ");
+        QString dirdata = args[0];
+        QString sreg = dirdata +"/"+ args[1];
         SetMark reg;
-        reg.Open(files[sreg]);
+        reg.Open(sreg);
         Histogram h1 = desc->Calculate(reg.get(0));
         //
-        int sval = args[1].toInt();
+        QString sval = dirdata +"/"+ args[2];
         SetMark val;
-        val.Open(files[sval]);
-        int smp = args[2].toInt();
+        val.Open(sval);
+        int smp = args[3].toInt();
         Histogram h2 = desc->Calculate(val.get(smp));
-        //
-        int thresh = args[3].toInt();
         //
         m_time.start();
         int d = h1.Distance(h2);
-        if (d<=thresh) m_out = "1";
+        if (d<=m_thresh) m_out = "1";
         else m_out = "0";
         m_procTime = m_time.elapsed();
     }
@@ -124,41 +102,10 @@ public:
 
 float ValidationAllMarksDistanceDesc(int thresh)
 {
-    QString dirdb = "../../benchmark/projects/randmarks/data";
-    files = createFileList(dirdb, "txt");
-    //
     BenchmarkEngine engine;
-    BenchmarkProgram *progQty = new StringEqualsCompProg;
-    BenchmarkEvaluation* evalQty = new DistanceRmEval;
-    progQty->setEvaluation(evalQty);
-    engine.addProgram(progQty);
-    //
-    for (auto i=0; i<files.size(); i++) {
-        for (auto j=0; j<files.size(); j++) {
-            if (i==j) {
-                for (auto k=1; k<5; k++) {
-                    QStringList args;
-                    args << QString::number(i)
-                         << QString::number(j)
-                         << QString::number(k)
-                         << QString::number(thresh);
-                    engine.addInstance(args, "1");
-                }
-            }
-            else {
-                for (auto k=0; k<5; k++) {
-                    QStringList args;
-                    args << QString::number(i)
-                         << QString::number(j)
-                         << QString::number(k)
-                         << QString::number(thresh);
-                    engine.addInstance(args, "0");
-                }
-            }
-        }
-    }
-    float rate = engine.ValidationRate(0);
-    return rate;
+    engine.Read("../../benchmark/projects/randmarks/setup/full.txt");
+    engine.add_program( new StringEqualsCompProg(new DistanceRmEval(thresh)) );
+    return engine.ValidationRate(0);
 }
 
 //TODO: use functors to avoid code duplication
@@ -199,6 +146,6 @@ void runAllRandomMarksBench()
 {
     qDebug() << ValidationAllMarksQuantityDesc(1);
     qDebug() << ValidationAllMarksDistanceDesc(80);
-//    CrossValidationQuantity();
+    CrossValidationQuantity();
     CrossValidationDistance();
 }

@@ -17,6 +17,11 @@ BenchmarkProgram::BenchmarkProgram(BenchmarkEvaluation *eval)
     m_eval = eval;
 }
 
+BenchmarkProgram::~BenchmarkProgram()
+{
+    if (m_eval!=nullptr) delete m_eval;
+}
+
 void BenchmarkProgram::set_evaluation(BenchmarkEvaluation *eval)
 {
     m_eval = eval;
@@ -86,6 +91,11 @@ StringEqualsCompProg::StringEqualsCompProg(BenchmarkEvaluation *eval)
 {
 }
 
+//StringEqualsCompProg::~StringEqualsCompProg()
+//{
+//    if (m_eval!=nullptr) delete m_eval;
+//}
+
 bool StringEqualsCompProg::Compare(QString out)
 {
     return (m_eval->output() == out);
@@ -102,6 +112,11 @@ NumberEqualsCompProg::NumberEqualsCompProg(BenchmarkEvaluation *eval)
     : BenchmarkProgram(eval)
 {
 }
+
+//NumberEqualsCompProg::~NumberEqualsCompProg()
+//{
+//    if (m_eval!=nullptr) delete m_eval;
+//}
 
 bool NumberEqualsCompProg::Compare(QString out)
 {

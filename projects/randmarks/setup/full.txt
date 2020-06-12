@@ -1,7 +1,4 @@
 {
-	"programs": [
-		"../quantity/quantity"
-	],
 	"comparison": "STRING_EQUALS",
 	"inputs": [
 		"../../benchmark/projects/randmarks/data 000.txt 000.txt 1 1",

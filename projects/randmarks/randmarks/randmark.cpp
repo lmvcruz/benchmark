@@ -1,6 +1,7 @@
 #include "randmark.h"
 
 #include <iostream>
+#include <float.h>
 
 #include <QFile>
 #include <QTextStream>
@@ -166,7 +167,7 @@ Histogram DistanceDescriptor::Calculate(SampleMark &mark)
     int size = mark.CalculateMarkSize();
     for(int i = 0; i < size - 1; i++){
         for(int j = (i+1); j < size; j++){
-            hist.AddData( mark.ParticleDistance(i,j) );
+            hist.AddData( std::min(mark.ParticleDistance(i,j),m_maxv-FLT_EPSILON) );
         }
     }
     return hist;

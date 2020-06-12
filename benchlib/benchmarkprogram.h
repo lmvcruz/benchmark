@@ -16,6 +16,7 @@ protected:
 public:
     BenchmarkProgram();
     BenchmarkProgram(BenchmarkEvaluation *eval);
+    virtual ~BenchmarkProgram();
 
     void set_evaluation(BenchmarkEvaluation *eval);
 
@@ -42,6 +43,8 @@ public:
     StringEqualsCompProg();
     StringEqualsCompProg(BenchmarkEvaluation *eval);
 
+//    virtual ~StringEqualsCompProg();
+
     bool Compare(QString out);
 };
 
@@ -50,6 +53,8 @@ class NumberEqualsCompProg : public BenchmarkProgram
 public:
     NumberEqualsCompProg();
     NumberEqualsCompProg(BenchmarkEvaluation *eval);
+
+//    virtual ~NumberEqualsCompProg();
 
     bool Compare(QString out);
 };

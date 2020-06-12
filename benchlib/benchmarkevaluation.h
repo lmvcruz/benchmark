@@ -1,7 +1,6 @@
 #ifndef BENCHMARKEVALUATION_H
 #define BENCHMARKEVALUATION_H
 
-
 #include <QVector>
 #include <QString>
 #include <QObject>

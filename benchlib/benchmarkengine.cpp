@@ -28,6 +28,14 @@ void saveCsvFile(ctk::NumericMatrix &mat, QString filename)
     }
 }
 
+BenchmarkEngine::~BenchmarkEngine()
+{
+    m_inputs.clear();
+    m_stringsexpected.clear();
+    for (auto &v: m_programs) delete v;
+    m_programs.clear();
+}
+
 void BenchmarkEngine::add_program(BenchmarkProgram *p)
 {
     m_programs.push_back(p);
@@ -146,6 +154,7 @@ float BenchmarkEngine::ValidationRate(int idx)
             corrects++;
         }
     }
+//    qDebug() << corrects << m_inputs.size();
     return static_cast<float>(corrects)/static_cast<float>(m_inputs.size());
 }
 
