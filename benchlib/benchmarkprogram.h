@@ -52,8 +52,6 @@ public:
     StringEqualsCompProg();
     StringEqualsCompProg(BenchmarkEvaluation *eval);
 
-//    virtual ~StringEqualsCompProg();
-
     bool Compare(QString out);
 };
 
@@ -62,8 +60,6 @@ class NumberEqualsCompProg : public BenchmarkProgram
 public:
     NumberEqualsCompProg();
     NumberEqualsCompProg(BenchmarkEvaluation *eval);
-
-//    virtual ~NumberEqualsCompProg();
 
     bool Compare(QString out);
 };
